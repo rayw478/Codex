@@ -15,7 +15,8 @@
             android:text="Flash"
             android:layout_width="wrap_content"
             android:layout_height="85dp" android:id="@+id/flashToggle"
-            style="@style/Widget.AppCompat.Button.Borderless" android:elevation="0dp" android:baselineAligned="false"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored" android:elevation="0dp"
+            android:baselineAligned="false"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="160dp" android:layout_marginStart="148dp"
             android:layout_marginEnd="148dp" app:layout_constraintEnd_toEndOf="parent"/>
