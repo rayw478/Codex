@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout2">
 
     <SurfaceView
-        android:id="@+id/camera_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+            android:id="@+id/camera_preview"
+            android:layout_width="356dp"
+            android:layout_height="206dp"
+            tools:layout_editor_absoluteY="15dp" tools:layout_editor_absoluteX="14dp"/>
+    <Button
+            android:text="Flash"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp" android:id="@+id/flashToggle"
+            style="@style/Widget.AppCompat.Button.Borderless" android:elevation="0dp" android:baselineAligned="false"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/camera_preview"
+            android:layout_marginBottom="172dp" android:layout_marginStart="148dp"
+            app:layout_constraintVertical_bias="1.0"/>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
