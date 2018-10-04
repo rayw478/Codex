@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/linearLayout2">
+        android:id="@+id/linearLayout2" android:minHeight="145dp">
 
     <SurfaceView
             android:id="@+id/camera_preview"
@@ -17,8 +17,7 @@
             android:layout_height="85dp" android:id="@+id/flashToggle"
             style="@style/Widget.AppCompat.Button.Borderless" android:elevation="0dp" android:baselineAligned="false"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/camera_preview"
-            android:layout_marginBottom="172dp" android:layout_marginStart="148dp"
-            app:layout_constraintVertical_bias="1.0"/>
+            android:layout_marginBottom="160dp" android:layout_marginStart="148dp"
+            android:layout_marginEnd="148dp" app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
