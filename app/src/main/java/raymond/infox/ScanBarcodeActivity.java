@@ -39,7 +39,6 @@ public class ScanBarcodeActivity extends Activity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-
                     Camera cam = getCamera(camSource);
                     Camera.Parameters p = cam.getParameters();
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {

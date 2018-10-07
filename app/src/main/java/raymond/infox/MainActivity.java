@@ -1,9 +1,13 @@
 package raymond.infox;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -12,9 +16,15 @@ import com.google.android.gms.vision.barcode.Barcode;
 public class MainActivity extends Activity {
 
     TextView barcodeResult;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+        }
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
