@@ -1,13 +1,11 @@
 package raymond.infox;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.SparseArray;
 import android.view.MotionEvent;
@@ -27,21 +25,22 @@ import java.lang.reflect.Field;
 public class ScanBarcodeActivity extends Activity {
     SurfaceView cameraPreview;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_barcode);
 
-        cameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
-        final CameraSource camsource = createCameraSource();
+        cameraPreview = findViewById(R.id.camera_preview);
+        final CameraSource camSource = createCameraSource();
+
 
         final Button button = findViewById(R.id.flashToggle);
         button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-                    Camera cam = getCamera(camsource);
+
+                    Camera cam = getCamera(camSource);
                     Camera.Parameters p = cam.getParameters();
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -81,7 +80,7 @@ public class ScanBarcodeActivity extends Activity {
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).build();
         final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(600, 800)
+                .setRequestedPreviewSize(1280  , 2160)
                 .build();
 
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -128,7 +127,6 @@ public class ScanBarcodeActivity extends Activity {
                     Intent intent = new Intent();
                     intent.putExtra("barcode", barcodes.valueAt(0)); //gets latest barcode from array
                     setResult(CommonStatusCodes.SUCCESS, intent);
-                    finish();
                 }
             }
         });
