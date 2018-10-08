@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">InfoX</string>
+    <string name="app_name">Reviewr</string>
+    <string name="button_flash">Flash</string>
 </resources>
