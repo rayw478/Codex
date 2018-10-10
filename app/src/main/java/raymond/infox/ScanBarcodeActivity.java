@@ -23,23 +23,19 @@ import java.lang.reflect.Field;
 
 public class ScanBarcodeActivity extends Activity {
     SurfaceView cameraPreview;
+    Button button;
+    CameraSource camSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.TRANSPARENT);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+        setupSystemUI();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_barcode);
 
         cameraPreview = findViewById(R.id.camera_preview);
-        final CameraSource camSource = createCameraSource();
-
-        final Button button = findViewById(R.id.flashToggle);
+        button = findViewById(R.id.flashToggle);
+        camSource = createCameraSource();
 
         button.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -60,6 +56,16 @@ public class ScanBarcodeActivity extends Activity {
         });
     }
 
+    // This function makes the status bar transparent.
+    private void setupSystemUI() {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    // Finds and returns the Camera field in CameraSource class.
     private static Camera getCamera(CameraSource cameraSource) {
         Field[] declaredFields = CameraSource.class.getDeclaredFields();
 
@@ -81,6 +87,9 @@ public class ScanBarcodeActivity extends Activity {
         return null;
     }
 
+
+    // Builds camera source with appropriate width, height, handles surface changes. Uses google play API to
+    // scan and store barcodes, and defines the behaviour when a barcode is detected
     private CameraSource createCameraSource() {
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).build();
         final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector)
@@ -106,7 +115,6 @@ public class ScanBarcodeActivity extends Activity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -122,7 +130,6 @@ public class ScanBarcodeActivity extends Activity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-
             }
 
             @Override
@@ -135,8 +142,6 @@ public class ScanBarcodeActivity extends Activity {
                 }
             }
         });
-
         return cameraSource;
-
     }
 }
