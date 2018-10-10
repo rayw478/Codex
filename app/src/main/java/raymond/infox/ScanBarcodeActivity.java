@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.SparseArray;
 import android.view.*;
@@ -65,7 +63,7 @@ public class ScanBarcodeActivity extends Activity {
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
-    // Finds and returns the Camera field in CameraSource class.
+    // Helper function, Finds and returns the Camera field in CameraSource class.
     private static Camera getCamera(CameraSource cameraSource) {
         Field[] declaredFields = CameraSource.class.getDeclaredFields();
 
@@ -73,11 +71,7 @@ public class ScanBarcodeActivity extends Activity {
             if (field.getType() == Camera.class) {
                 field.setAccessible(true);
                 try {
-                    Camera camera = (Camera) field.get(cameraSource);
-                    if (camera != null) {
-                        return camera;
-                    }
-                    return null;
+                    return (Camera) field.get(cameraSource);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

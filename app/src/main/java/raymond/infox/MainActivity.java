@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -28,7 +26,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        barcodeResult = (TextView)findViewById(R.id.barcode_result);
+        barcodeResult = findViewById(R.id.barcode_result);
     }
 
     //add a click event on the button
