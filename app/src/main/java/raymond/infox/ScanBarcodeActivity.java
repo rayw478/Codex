@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class ScanBarcodeActivity extends Activity {
+
     SurfaceView cameraPreview;
     Button button;
     CameraSource camSource;
+
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +105,12 @@ public class ScanBarcodeActivity extends Activity {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    return;
+
+                    ActivityCompat.requestPermissions(ScanBarcodeActivity.this,
+                            new String[]{android.Manifest.permission.CAMERA},
+                            MY_CAMERA_REQUEST_CODE);
+
+
                 }
                 try {
                     cameraSource.start(cameraPreview.getHolder());
@@ -137,5 +145,10 @@ public class ScanBarcodeActivity extends Activity {
             }
         });
         return cameraSource;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        createCameraSource();
     }
 }
