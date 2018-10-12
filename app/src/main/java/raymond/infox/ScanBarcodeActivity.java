@@ -1,5 +1,6 @@
 package raymond.infox;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,6 +26,7 @@ public class ScanBarcodeActivity extends Activity {
     Button button;
     CameraSource camSource;
 
+    private static final int INTERNET_REQUEST_CODE = 99;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
@@ -109,6 +111,10 @@ public class ScanBarcodeActivity extends Activity {
                     ActivityCompat.requestPermissions(ScanBarcodeActivity.this,
                             new String[]{android.Manifest.permission.CAMERA},
                             MY_CAMERA_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(ScanBarcodeActivity.this,
+                            new String[]{Manifest.permission.INTERNET},
+                            INTERNET_REQUEST_CODE);
+
 
 
                 }
