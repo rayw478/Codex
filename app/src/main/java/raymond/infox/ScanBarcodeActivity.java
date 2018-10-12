@@ -26,6 +26,9 @@ public class ScanBarcodeActivity extends Activity {
     Button button;
     CameraSource camSource;
 
+    int bestWidth;
+    int bestHeight;
+
     private static final int INTERNET_REQUEST_CODE = 99;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
 
@@ -86,6 +89,11 @@ public class ScanBarcodeActivity extends Activity {
         return null;
     }
 
+    private void optimalResolution() {
+        //TODO
+        // get optimal camera resolution, store in vars bestWidth, bestHeight
+    }
+
 
     // Builds camera source with appropriate width, height, handles surface changes. Uses google play API to
     // scan and store barcodes, and defines the behaviour when a barcode is detected
@@ -127,6 +135,7 @@ public class ScanBarcodeActivity extends Activity {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                optimalResolution();
             }
 
             @Override
