@@ -22,12 +22,12 @@ import java.lang.reflect.Field;
 
 public class ScanBarcodeActivity extends Activity {
 
+    int bestWidth;
+    int bestHeight;
+
     SurfaceView cameraPreview;
     Button button;
     CameraSource camSource;
-
-    int bestWidth;
-    int bestHeight;
 
     private static final int INTERNET_REQUEST_CODE = 99;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -40,6 +40,8 @@ public class ScanBarcodeActivity extends Activity {
         setContentView(R.layout.activity_scan_barcode);
 
         cameraPreview = findViewById(R.id.camera_preview);
+
+
         button = findViewById(R.id.flashToggle);
         camSource = createCameraSource();
 
@@ -89,9 +91,34 @@ public class ScanBarcodeActivity extends Activity {
         return null;
     }
 
+
+
     private void optimalResolution() {
-        //TODO
-        // get optimal camera resolution, store in vars bestWidth, bestHeight
+//        Camera tmp = Camera.open(0);
+//        List<Camera.Size> supportedResolutions = tmp.getParameters().getSupportedPreviewSizes();
+//        double target = (double) cameraPreview.getWidth() / cameraPreview.getHeight();
+//        Camera.Size bestSize = null;
+//        for (Camera.Size size : supportedResolutions) {
+//            if (bestSize == null) {
+//                bestSize = size;
+//            } else {
+//                double currentBest = (double) bestSize.width / bestSize.height;
+//                double thisRatio = (double) size.width / size.height;
+//                if (Math.abs(target - thisRatio) < (Math.abs(target - currentBest))) {
+//                    bestSize = size;
+//                }
+//            }
+//        }
+//        if (bestSize != null) {
+//            bestWidth = bestSize.width;
+//            bestHeight = bestSize.height;
+//        } else {
+//            bestWidth = 1000;
+//            bestHeight = 2560;
+//        }
+//        tmp.stopPreview();
+//        tmp.setPreviewCallback(null);
+//        tmp.release();
     }
 
 
@@ -101,7 +128,7 @@ public class ScanBarcodeActivity extends Activity {
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).build();
         final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1280  , 2160)
+                .setRequestedPreviewSize(2960  , 1440)
                 .build();
 
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -124,7 +151,6 @@ public class ScanBarcodeActivity extends Activity {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                optimalResolution();
             }
 
             @Override
