@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.*;
 import android.widget.Button;
@@ -23,9 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class ScanBarcodeActivity extends Activity {
-
-    int bestWidth;
-    int bestHeight;
 
     SurfaceView cameraPreview;
     Button button;
@@ -90,47 +86,8 @@ public class ScanBarcodeActivity extends Activity {
                 break;
             }
         }
-        return null;
+        return null; // should not return null
     }
-
-
-
-    private void optimalResolution() {
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        int width = size.x;
-//        int height = size.y;
-//        Log.e("Width", "" + width);
-//        Log.e("height", "" + height);
-//
-//        Camera tmp = Camera.open(0);
-//        List<Camera.Size> supportedResolutions = tmp.getParameters().getSupportedPreviewSizes();
-//        double target = (double) width / (double) height;
-//        Camera.Size bestSize = null;
-//        for (Camera.Size cursize : supportedResolutions) {
-//            if (bestSize == null) {
-//                bestSize = cursize;
-//            } else {
-//                double currentBest = (double) bestSize.width / (double) bestSize.height;
-//                double thisRatio = (double) cursize.width / (double) cursize.height;
-//                if (Math.abs(target - thisRatio) < (Math.abs(target - currentBest))) {
-//                    bestSize = cursize;
-//                }
-//            }
-//        }
-//        if (bestSize != null) {
-//            bestWidth = bestSize.width;
-//            bestHeight = bestSize.height;
-//        } else {
-//            bestWidth = 2220;
-//            bestHeight = 1080;
-//        }
-//        tmp.stopPreview();
-//        tmp.setPreviewCallback(null);
-//        tmp.release();
-    }
-
 
     // Builds camera source with appropriate width, height, handles surface changes. Uses google play API to
     // scan and store barcodes, and defines the behaviour when a barcode is detected
@@ -141,8 +98,6 @@ public class ScanBarcodeActivity extends Activity {
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        Log.e("Width", "" + width);
-        Log.e("height", "" + height);
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).build();
         final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setAutoFocusEnabled(true)
