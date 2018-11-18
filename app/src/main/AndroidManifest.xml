@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="raymond.infox">
 
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -14,11 +16,11 @@
 
         <!-- added mobile vision dependencies and version -->
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"/>
         <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="barcode" />
+                android:name="com.google.android.gms.vision.DEPENDENCIES"
+                android:value="barcode"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -27,12 +29,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        
         <activity
-             android:name=".ScanBarcodeActivity"
-             android:label="Scan Barcode" />
-
-        
+                android:name=".ScanBarcodeActivity"
+                android:label="Scan Barcode"/>
+        <activity
+                android:name=".WebActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/title_activity_web"
+                android:theme="@style/FullscreenTheme">
+        </activity>
     </application>
 
 </manifest>
