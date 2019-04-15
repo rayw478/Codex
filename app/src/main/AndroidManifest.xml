@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="raymond.infox">
+    package="raymond.infox">
 
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".BarcodeActivity"></activity>
         <!-- added mobile vision dependencies and version -->
         <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
-                android:name="com.google.android.gms.vision.DEPENDENCIES"
-                android:value="barcode"/>
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".ScanBarcodeActivity"
-                android:label="Scan Barcode"/>
+            android:name=".ScanBarcodeActivity"
+            android:label="Scan Barcode" />
         <activity
-                android:name=".WebActivity"
-                android:configChanges="orientation|keyboardHidden|screenSize"
-                android:label="@string/title_activity_web"
-                android:theme="@style/FullscreenTheme">
-        </activity>
+            android:name=".WebActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_web"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

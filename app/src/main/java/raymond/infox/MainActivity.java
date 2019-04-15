@@ -12,12 +12,14 @@ import com.google.android.gms.vision.barcode.Barcode;
 public class MainActivity extends Activity {
 
     TextView barcodeResult;
+    Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        barcodeResult = findViewById(R.id.barcode_result);
+        barcodeResult = findViewById(R.id.barcode_entry);
+        db = new Database(this);
     }
 
     //add a click event on the button
@@ -35,6 +37,8 @@ public class MainActivity extends Activity {
                     String val = barcode.displayValue;
                     String result = "Value : " + val ;
                     barcodeResult.setText(result);
+
+
                 } else {
                     barcodeResult.setText("No barcode detected");
                 }
