@@ -1,2 +1,2 @@
 # Codex
-Simple app that stores barcodes and description in an SQLite database
+Simple android app that stores barcodes and description in an SQLite database
