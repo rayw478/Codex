@@ -11,15 +11,14 @@
 
     <Button
         android:id="@+id/scan_barcode"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="125dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="137dp"
-        android:layout_marginTop="324dp"
-        android:layout_marginEnd="137dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="145dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="320dp"
+        android:drawableLeft="@drawable/ic_camera_white"
         android:onClick="scanBarcode"
         android:text="@string/scan_barcode"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_entry" />
 
@@ -118,7 +117,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
