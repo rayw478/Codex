@@ -45,9 +45,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\raymo\Downloads\ic_add_white_48dp.png" />
-                                      <entry key="outputName" value="ic_add_white" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="imageAsset" value="C:\Users\raymo\Downloads\Photo_Add-RoundedBlack-512 (1).png" />
+                                      <entry key="outputName" value="ic_add_photo_white" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>

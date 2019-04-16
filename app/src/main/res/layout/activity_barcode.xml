@@ -15,7 +15,7 @@
         android:layout_width="145dp"
         android:layout_height="62dp"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="50dp"
         android:drawableLeft="@drawable/ic_camera_white"
         android:onClick="scanBarcode"
         android:text="@string/scan_barcode"
@@ -27,12 +27,12 @@
         android:layout_width="315dp"
         android:layout_height="20dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="48dp"
         android:text="@string/barcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
         android:id="@+id/textView2"
@@ -79,7 +79,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
-        android:inputType="numberDecimal"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -121,5 +121,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="315dp"
+        android:layout_height="271dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        app:srcCompat="@drawable/ic_add_photo_white" />
 
 </android.support.constraint.ConstraintLayout>
