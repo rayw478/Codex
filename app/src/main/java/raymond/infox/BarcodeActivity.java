@@ -30,6 +30,21 @@ public class BarcodeActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         db = new Database(this);
+
+        String code = getIntent().getStringExtra("code");
+        String desc = getIntent().getStringExtra("desc");
+        String price = getIntent().getStringExtra("price");
+
+        if (code != null) {
+            barcodeEntry.setText(code);
+        }
+        if (desc != null) {
+            descEntry.setText(desc);
+        }
+        if (price != null) {
+            priceEntry.setText(price);
+        }
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +63,7 @@ public class BarcodeActivity extends AppCompatActivity {
     // Add entry to database
     public void addEntry(View v) {
         if (!barcodeEntry.getText().toString().equals("") && !descEntry.getText().toString().equals("")) {
-            if (db.addData(barcodeEntry.getText().toString(), descEntry.getText().toString(), priceEntry.getText().toString())) {
+            if (db.addOrUpdateData(barcodeEntry.getText().toString(), descEntry.getText().toString(), priceEntry.getText().toString())) {
                 Toast.makeText(this, "Entry add success!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {

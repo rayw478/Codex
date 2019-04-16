@@ -56,11 +56,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = parent.getItemAtPosition(position).toString();
-                Cursor data = db.getItemID(name);
-                Toast.makeText(MainActivity.this, "sgsg", Toast.LENGTH_SHORT).show();
+                Cursor data = db.getItem(name);
+                data.moveToNext();
+                updateEntry(view, data.getString(0), data.getString(1), data.getString(2));
+                //Toast.makeText(MainActivity.this, data.getString(0), Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+
+    protected void updateEntry(View v, String barcode, String desc, String price) {
+        Intent intent = new Intent(this, BarcodeActivity.class);
+        intent.putExtra("code", barcode);
+        intent.putExtra("desc", desc);
+        intent.putExtra("price", price);
+        startActivityForResult(intent, 1);
+        fillEntries();
     }
 
     protected void addEntry(View v) {

@@ -11,13 +11,14 @@
 
     <Button
         android:id="@+id/scan_barcode"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="125dp"
         android:layout_height="52dp"
         android:layout_marginStart="137dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="324dp"
         android:layout_marginEnd="137dp"
         android:onClick="scanBarcode"
-        android:text="Scan Barcode"
+        android:text="@string/scan_barcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_entry" />
@@ -29,7 +30,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="48dp"
-        android:text="Barcode:"
+        android:text="@string/barcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
@@ -41,7 +42,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
-        android:text="Description:"
+        android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/code_entry" />
@@ -66,7 +67,7 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
-        android:text="Price:"
+        android:text="@string/price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desc_entry" />
@@ -92,7 +93,7 @@
         android:layout_marginTop="588dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:src="@drawable/ic_baseline_done_24px"
+        android:src="@drawable/ic_done_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
@@ -117,7 +118,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />

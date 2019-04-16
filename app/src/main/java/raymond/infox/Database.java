@@ -40,22 +40,21 @@ public class Database extends SQLiteOpenHelper {
      * @param price Price at scan
      * @return      true if successfully added, false otherwise
      */
-    public boolean addData(String code, String desc, String price) {
+    public boolean addOrUpdateData(String code, String desc, String price) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, code);
         contentValues.put(COL2, desc);
         contentValues.put(COL3, price);
 
-        Log.d(TAG, "addData: Adding " + code + " to " + TABLE_NAME);
+        Log.d(TAG, "addOrUpdateData: Adding " + code + " to " + TABLE_NAME);
         long result = db.insert(TABLE_NAME, null, contentValues);
 
         //if date as inserted incorrectly it will return -1
         if (result == -1) {
-            return false;
-        } else {
-            return true;
+            db.update(TABLE_NAME, contentValues, String.format("%s = ?", COL1), new String[]{code} );
         }
+        return true;
     }
 
     public boolean removeData() {
@@ -78,12 +77,10 @@ public class Database extends SQLiteOpenHelper {
      * @param name
      * @return
      */
-    public Cursor getItemID(String name){
+    public Cursor getItem(String name){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT " + COL1 + " FROM " + TABLE_NAME +
-                " WHERE " + COL2 + " = '" + name + "'";
-        Cursor data = db.rawQuery(query, null);
-        return data;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL2 + "=\"" + name + "\"";
+        return db.rawQuery(query, null);
     }
 
 
