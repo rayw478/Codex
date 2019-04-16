@@ -1,3 +1,2 @@
-# InfoX
-App
-Scans barcode of any article
+# Codex
+Simple app that stores barcodes and description in an SQLite database
