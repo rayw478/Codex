@@ -22,7 +22,7 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " int, " + COL2 +" varchar(255), " + COL3 + " varchar(16))";
+        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " int UNIQUE, " + COL2 +" varchar(255), " + COL3 + " varchar(16))";
         db.execSQL(createTable);
     }
 
@@ -56,6 +56,11 @@ public class Database extends SQLiteOpenHelper {
         } else {
             return true;
         }
+    }
+
+    public boolean removeData() {
+
+        return false;
     }
 
     /**
