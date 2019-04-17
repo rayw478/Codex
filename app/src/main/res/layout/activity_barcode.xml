@@ -12,14 +12,16 @@
     <Button
         android:id="@+id/scan_barcode"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="145dp"
+        android:layout_width="100dp"
         android:layout_height="62dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
         android:drawableLeft="@drawable/ic_camera_white"
         android:onClick="scanBarcode"
         android:text="@string/scan_barcode"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fab"
+        app:layout_constraintStart_toEndOf="@+id/delete_entry"
         app:layout_constraintTop_toBottomOf="@+id/price_entry" />
 
     <TextView
@@ -32,10 +34,10 @@
         android:text="@string/barcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/item_image" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/desc_entry_caption"
         android:layout_width="315dp"
         android:layout_height="20dp"
         android:layout_marginStart="48dp"
@@ -57,10 +59,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/desc_entry_caption" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/price_entry_caption"
         android:layout_width="315dp"
         android:layout_height="20dp"
         android:layout_marginStart="48dp"
@@ -82,7 +84,7 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/price_entry_caption" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -123,7 +125,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/item_image"
         android:layout_width="315dp"
         android:layout_height="271dp"
         android:layout_marginStart="8dp"
@@ -133,5 +135,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
         app:srcCompat="@drawable/ic_add_photo_white" />
+
+    <Button
+        android:id="@+id/delete_entry"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="101dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:drawableStart="@drawable/ic_delete_white"
+        android:text="@string/delete_entry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_entry" />
 
 </android.support.constraint.ConstraintLayout>

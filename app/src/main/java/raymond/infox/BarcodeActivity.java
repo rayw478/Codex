@@ -27,8 +27,16 @@ public class BarcodeActivity extends AppCompatActivity {
         barcodeEntry = findViewById(R.id.code_entry);
         descEntry = findViewById(R.id.desc_entry);
         priceEntry = findViewById(R.id.price_entry);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         db = new Database(this);
 
         String code = getIntent().getStringExtra("code");
