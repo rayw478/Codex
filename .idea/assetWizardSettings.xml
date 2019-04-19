@@ -46,7 +46,6 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="paddingPercent" value="-5" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -68,8 +67,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\raymo\Downloads\baseline-delete-white-24\2x\baseline_delete_white_24dp.png" />
-                                      <entry key="outputName" value="ic_delete_white" />
+                                      <entry key="imageAsset" value="C:\Users\raymo\Downloads\baseline-flash_off-white-24\2x\baseline_flash_off_white_24dp.png" />
+                                      <entry key="outputName" value="ic_flash_off_white" />
                                       <entry key="theme" value="HOLO_DARK" />
                                       <entry key="themeColor" value="ffffff" />
                                     </map>

@@ -15,6 +15,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String COL1 = "Barcode";
     private static final String COL2 = "Item";
     private static final String COL3 = "Price";
+    private static final String COL4 = "Image";
 
     public Database(Context context) {
         super(context, TABLE_NAME, null, 1);
@@ -22,7 +23,8 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " varchar(255) UNIQUE, " + COL2 + " varchar(255), " + COL3 + " varchar(16))";
+        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + COL1 + " varchar(255) UNIQUE, " +
+                              COL2 + " varchar(255), " + COL3 + " varchar(16), " + COL4 + " varchar(255))";
         db.execSQL(createTable);
     }
 
@@ -40,12 +42,13 @@ public class Database extends SQLiteOpenHelper {
      * @param price Price at scan
      * @return      true if successfully added, false otherwise
      */
-    public boolean addOrUpdateData(String code, String desc, String price) {
+    public boolean addOrUpdateData(String code, String desc, String price, String image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, code);
         contentValues.put(COL2, desc);
         contentValues.put(COL3, price);
+        contentValues.put(COL4, image);
 
         Log.d(TAG, "addOrUpdateData: Adding " + code + " to " + TABLE_NAME);
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -57,9 +60,13 @@ public class Database extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean removeData() {
-
-        return false;
+    public boolean removeData(String code) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (db.delete(TABLE_NAME, String.format("%s = ?", COL1), new String[]{code}) == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

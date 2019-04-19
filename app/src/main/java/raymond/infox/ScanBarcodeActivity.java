@@ -1,23 +1,39 @@
 package raymond.infox;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.SparseArray;
-import android.view.*;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
@@ -26,22 +42,23 @@ public class ScanBarcodeActivity extends Activity {
     SurfaceView cameraPreview;
     Button button;
     CameraSource camSource;
+    Barcode bcode;
 
-    private static final int INTERNET_REQUEST_CODE = 99;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private static final int WRITE_REQUEST_CODE = 101;
+    private static final int READ_REQUEST_CODE = 102;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setupSystemUI();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_barcode);
-
         cameraPreview = findViewById(R.id.camera_preview);
-
-
         button = findViewById(R.id.flashToggle);
         camSource = createCameraSource();
+        bcode = null;
 
         button.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -58,6 +75,48 @@ public class ScanBarcodeActivity extends Activity {
                     }
                 }
                 return true;
+            }
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhoto(view);
+                finish();
+            }
+        });
+    }
+
+    private void takePhoto(View view) {
+        camSource.takePicture(null, new CameraSource.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] bytes) {
+                Intent intent = new Intent();
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Codex/Photos";
+                File dir = new File(file_path);
+                if(!dir.exists())
+                    dir.mkdirs();
+                File file = new File(dir, "test"  + ".jpg");
+                try {
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                intent.putExtra("imagePath", file.getAbsolutePath());
+                if (bcode != null) {
+                   intent.putExtra("barcode", bcode);
+                }
+                setResult(CommonStatusCodes.SUCCESS, intent);
+                Toast.makeText(ScanBarcodeActivity.this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
@@ -113,8 +172,11 @@ public class ScanBarcodeActivity extends Activity {
                             new String[]{android.Manifest.permission.CAMERA},
                             MY_CAMERA_REQUEST_CODE);
                     ActivityCompat.requestPermissions(ScanBarcodeActivity.this,
-                            new String[]{Manifest.permission.INTERNET},
-                            INTERNET_REQUEST_CODE);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            WRITE_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(ScanBarcodeActivity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            READ_REQUEST_CODE);
                 }
                 try {
                     cameraSource.start(cameraPreview.getHolder());
@@ -142,14 +204,24 @@ public class ScanBarcodeActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(barcodes.size() > 0) {
-                    Intent intent = new Intent();
-                    intent.putExtra("barcode", barcodes.valueAt(0)); //gets latest barcode from array
-                    setResult(CommonStatusCodes.SUCCESS, intent);
+                    bcode = barcodes.valueAt(0); //gets latest barcode from array
+                    Toast.makeText(ScanBarcodeActivity.this, "Barcode detected", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         return cameraSource;
     }
+
+
+    //private File getOutputImageFile(String fileName) {
+        //File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/TestingTesting/");
+        //dir.mkdirs();
+    //    String name = fileName + ".jpg";
+    //    File file = new File(getApplicationContext().getFilesDir(), name);
+
+  //      return file;
+//    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
