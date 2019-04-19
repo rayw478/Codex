@@ -98,7 +98,7 @@ public class BarcodeActivity extends AppCompatActivity {
     public void addEntry(View v) {
         if (barcodeEntry.length() != 0 && descEntry.length() != 0) {
             if (db.addOrUpdateData(barcodeEntry.getText().toString(), descEntry.getText().toString(),
-                                   priceEntry.getText().toString(), "")) {
+                                   priceEntry.getText().toString(), imagePath)) {
                 Toast.makeText(this, "Entry add success!", Toast.LENGTH_SHORT).show();
                 setResult(CommonStatusCodes.SUCCESS);
                 db.close();
@@ -127,21 +127,27 @@ public class BarcodeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 3) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
-                String imgPath;
-                Barcode barcode;
-                if ((barcode = data.getParcelableExtra("barcode")) != null) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra("barcode");
                     barcodeEntry.setText(barcode.displayValue);
-                    Bitmap bmp = BitmapFactory.decodeFile(data.getStringExtra("imagePath"));
-                    imageEntry.setImageBitmap(bmp);
+                        //Bitmap bmp = BitmapFactory.decodeFile(data.getStringExtra("imagePath"));
+                        // imageEntry.setImageBitmap(bmp);
 
                 } else {
                     Toast.makeText(this, "No barcode detected!", Toast.LENGTH_SHORT).show();
                 }
+
                 //if ((imgPath = data.getStringExtra("imagePath")) != null) {
                 //        Bitmap bmp = BitmapFactory.decodeFile(imgPath);
                 //        imageEntry.setImageBitmap(bmp);
 
                 // }
+            } else if (resultCode == 999) {
+                imagePath = data.getStringExtra("imagePath");
+                Barcode barcode = data.getParcelableExtra("barcode");
+                barcodeEntry.setText(barcode.displayValue);
+                Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+                imageEntry.setImageBitmap(bmp);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

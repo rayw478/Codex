@@ -26,14 +26,14 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="94dp"
         android:layout_height="45dp"
-        android:layout_marginTop="556dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="36dp"
         android:baselineAligned="false"
         android:drawableStart="@drawable/ic_flash_on_white"
         android:elevation="0dp"
         android:text="@string/button_flash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

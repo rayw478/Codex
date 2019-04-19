@@ -47,6 +47,7 @@ public class ScanBarcodeActivity extends Activity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final int WRITE_REQUEST_CODE = 101;
     private static final int READ_REQUEST_CODE = 102;
+    private static final int PICTURE_RETURN_CODE = 999;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -82,8 +83,12 @@ public class ScanBarcodeActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhoto(view);
-                finish();
+                if (bcode == null) {
+                    Toast.makeText(ScanBarcodeActivity.this, "Scan a barcode first.", Toast.LENGTH_SHORT).show();
+                } else {
+                    takePhoto(view);
+                }
+                //finish();
             }
         });
     }
@@ -98,7 +103,7 @@ public class ScanBarcodeActivity extends Activity {
                 File dir = new File(file_path);
                 if(!dir.exists())
                     dir.mkdirs();
-                File file = new File(dir, "test"  + ".jpg");
+                File file = new File(dir, "test" + ".jpg");
                 try {
                     FileOutputStream fOut = new FileOutputStream(file);
                     bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
@@ -111,11 +116,8 @@ public class ScanBarcodeActivity extends Activity {
                     e.printStackTrace();
                 }
                 intent.putExtra("imagePath", file.getAbsolutePath());
-                if (bcode != null) {
-                   intent.putExtra("barcode", bcode);
-                }
-                setResult(CommonStatusCodes.SUCCESS, intent);
-                Toast.makeText(ScanBarcodeActivity.this, file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("barcode", bcode);
+                setResult(PICTURE_RETURN_CODE, intent);
                 finish();
             }
         });
@@ -205,22 +207,14 @@ public class ScanBarcodeActivity extends Activity {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(barcodes.size() > 0) {
                     bcode = barcodes.valueAt(0); //gets latest barcode from array
-                    Toast.makeText(ScanBarcodeActivity.this, "Barcode detected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra("barcode", bcode);
+                    setResult(CommonStatusCodes.SUCCESS, intent);
                 }
             }
         });
         return cameraSource;
     }
-
-
-    //private File getOutputImageFile(String fileName) {
-        //File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/TestingTesting/");
-        //dir.mkdirs();
-    //    String name = fileName + ".jpg";
-    //    File file = new File(getApplicationContext().getFilesDir(), name);
-
-  //      return file;
-//    }
 
 
     @Override
