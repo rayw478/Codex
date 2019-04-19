@@ -9,7 +9,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,9 @@ public class BarcodeActivity extends AppCompatActivity {
     TextView barcodeEntry;
     TextView descEntry;
     TextView priceEntry;
+    TextView sizeEntry;
     ImageView imageEntry;
+    Spinner  departmentEntry;
     Database db;
     String imagePath = "";
 
@@ -38,6 +42,8 @@ public class BarcodeActivity extends AppCompatActivity {
         descEntry = findViewById(R.id.desc_entry);
         priceEntry = findViewById(R.id.price_entry);
         imageEntry = findViewById(R.id.item_image);
+        departmentEntry = findViewById(R.id.department_spinner);
+        sizeEntry = findViewById(R.id.size_entry);
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,12 +57,17 @@ public class BarcodeActivity extends AppCompatActivity {
             }
         });
 
+        ArrayAdapter<Categories> adapter = new ArrayAdapter<Categories>(this, android.R.layout.simple_spinner_item, Categories.values());
+        departmentEntry.setAdapter(adapter);
 
         if (getIntent().getIntExtra("requestCode", 0) != ADD_REQUEST) {
             String code = getIntent().getStringExtra("code");
             String desc = getIntent().getStringExtra("desc");
             String price = getIntent().getStringExtra("price");
             String image = getIntent().getStringExtra("imgPath");
+            String size = getIntent().getStringExtra("size");
+            String dep = getIntent().getStringExtra("department");
+
 
             if (code != null) {
                 barcodeEntry.setText(code);
@@ -66,6 +77,18 @@ public class BarcodeActivity extends AppCompatActivity {
             }
             if (price != null) {
                 priceEntry.setText(price);
+            }
+            if (size != null) {
+                sizeEntry.setText(size);
+            }
+            if (dep != null) {
+                if (!dep.equals("")) {
+                    Categories cat = Categories.ELECTRONICS.toCategory(dep);
+                    if (cat != null) {
+                        int spinnerPosition = adapter.getPosition(cat);
+                        departmentEntry.setSelection(spinnerPosition);
+                    }
+                }
             }
             if (image != null) {
                 if (!image.isEmpty()) {
@@ -91,6 +114,7 @@ public class BarcodeActivity extends AppCompatActivity {
     //add a click event on the button
     public void scanBarcode(View v) {
         Intent intent = new Intent(this, ScanBarcodeActivity.class);
+        intent.putExtra("barcode", barcodeEntry.getText().toString());
         startActivityForResult(intent, 3);
     }
 
@@ -98,7 +122,8 @@ public class BarcodeActivity extends AppCompatActivity {
     public void addEntry(View v) {
         if (barcodeEntry.length() != 0 && descEntry.length() != 0) {
             if (db.addOrUpdateData(barcodeEntry.getText().toString(), descEntry.getText().toString(),
-                                   priceEntry.getText().toString(), imagePath)) {
+                                   priceEntry.getText().toString(), imagePath, sizeEntry.getText().toString(),
+                                  (Categories) departmentEntry.getSelectedItem())) {
                 Toast.makeText(this, "Entry add success!", Toast.LENGTH_SHORT).show();
                 setResult(CommonStatusCodes.SUCCESS);
                 db.close();
@@ -130,22 +155,13 @@ public class BarcodeActivity extends AppCompatActivity {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra("barcode");
                     barcodeEntry.setText(barcode.displayValue);
-                        //Bitmap bmp = BitmapFactory.decodeFile(data.getStringExtra("imagePath"));
-                        // imageEntry.setImageBitmap(bmp);
-
                 } else {
                     Toast.makeText(this, "No barcode detected!", Toast.LENGTH_SHORT).show();
                 }
-
-                //if ((imgPath = data.getStringExtra("imagePath")) != null) {
-                //        Bitmap bmp = BitmapFactory.decodeFile(imgPath);
-                //        imageEntry.setImageBitmap(bmp);
-
-                // }
             } else if (resultCode == 999) {
                 imagePath = data.getStringExtra("imagePath");
-                Barcode barcode = data.getParcelableExtra("barcode");
-                barcodeEntry.setText(barcode.displayValue);
+                String barcode = data.getStringExtra("barcode");
+                barcodeEntry.setText(barcode);
                 Bitmap bmp = BitmapFactory.decodeFile(imagePath);
                 imageEntry.setImageBitmap(bmp);
             }

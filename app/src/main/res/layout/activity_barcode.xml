@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minWidth="137dp"
     android:minHeight="250dp"
@@ -17,7 +17,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:drawableLeft="@drawable/ic_camera_white"
+        android:drawableStart="@drawable/ic_camera_white"
         android:onClick="scanBarcode"
         android:text="@string/scan_barcode"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,64 +26,54 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="315dp"
+        android:layout_width="207dp"
         android:layout_height="20dp"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="48dp"
         android:text="@string/barcode"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_image" />
 
     <TextView
         android:id="@+id/desc_entry_caption"
-        android:layout_width="315dp"
+        android:layout_width="208dp"
         android:layout_height="20dp"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
         android:text="@string/description"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/code_entry" />
 
     <EditText
         android:id="@+id/desc_entry"
-        android:layout_width="315dp"
+        android:layout_width="208dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desc_entry_caption" />
 
     <TextView
         android:id="@+id/price_entry_caption"
-        android:layout_width="315dp"
+        android:layout_width="82dp"
         android:layout_height="20dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
         android:text="@string/price"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/desc_entry" />
+        app:layout_constraintTop_toBottomOf="@+id/item_image" />
 
     <EditText
         android:id="@+id/price_entry"
-        android:layout_width="315dp"
+        android:layout_width="82dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="24dp"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/price_entry_caption" />
 
     <android.support.design.widget.FloatingActionButton
@@ -111,24 +101,24 @@
 
     <EditText
         android:id="@+id/code_entry"
-        android:layout_width="315dp"
+        android:layout_width="208dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
         android:ems="10"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ImageView
         android:id="@+id/item_image"
         android:layout_width="315dp"
-        android:layout_height="141dp"
+        android:layout_height="253dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
@@ -146,5 +136,38 @@
         android:text="@string/delete_entry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/size_entry_caption"
+        android:layout_width="82dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_entry" />
+
+    <EditText
+        android:id="@+id/size_entry"
+        android:layout_width="82dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/size_entry_caption" />
+
+    <Spinner
+        android:id="@+id/department_spinner"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/desc_entry" />
 
 </android.support.constraint.ConstraintLayout>

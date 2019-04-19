@@ -5,9 +5,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -42,7 +44,8 @@ public class ScanBarcodeActivity extends Activity {
     SurfaceView cameraPreview;
     Button button;
     CameraSource camSource;
-    Barcode bcode;
+    String code;
+    int orientation;
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final int WRITE_REQUEST_CODE = 101;
@@ -59,13 +62,18 @@ public class ScanBarcodeActivity extends Activity {
         cameraPreview = findViewById(R.id.camera_preview);
         button = findViewById(R.id.flashToggle);
         camSource = createCameraSource();
-        bcode = null;
+        if (!getIntent().getStringExtra("barcode").equals("")) {
+            code = getIntent().getStringExtra("barcode");
+        } else {
+            code = null;
+        }
 
         button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
                     Camera cam = getCamera(camSource);
+                    assert cam != null;
                     Camera.Parameters p = cam.getParameters();
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -83,27 +91,34 @@ public class ScanBarcodeActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bcode == null) {
+                if (code == null) {
                     Toast.makeText(ScanBarcodeActivity.this, "Scan a barcode first.", Toast.LENGTH_SHORT).show();
                 } else {
                     takePhoto(view);
                 }
-                //finish();
             }
         });
     }
 
     private void takePhoto(View view) {
-        camSource.takePicture(null, new CameraSource.PictureCallback() {
+        camSource.takePicture(new CameraSource.ShutterCallback() {
+            @Override
+            public void onShutter() {
+                orientation = getResources().getConfiguration().orientation;
+            }
+        }, new CameraSource.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] bytes) {
                 Intent intent = new Intent();
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    bmp = rotatePortrait(bmp);
+                }
                 String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Codex/Photos";
                 File dir = new File(file_path);
-                if(!dir.exists())
+                if (!dir.exists())
                     dir.mkdirs();
-                File file = new File(dir, "test" + ".jpg");
+                File file = new File(dir, code + ".jpg");
                 try {
                     FileOutputStream fOut = new FileOutputStream(file);
                     bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
@@ -116,12 +131,19 @@ public class ScanBarcodeActivity extends Activity {
                     e.printStackTrace();
                 }
                 intent.putExtra("imagePath", file.getAbsolutePath());
-                intent.putExtra("barcode", bcode);
+                intent.putExtra("barcode", code);
                 setResult(PICTURE_RETURN_CODE, intent);
                 finish();
             }
         });
     }
+
+    private Bitmap rotatePortrait(Bitmap bmp) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        return Bitmap.createBitmap(bmp, 0,0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+    }
+
 
     // This function makes the status bar transparent.
     private void setupSystemUI() {
@@ -206,9 +228,9 @@ public class ScanBarcodeActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if(barcodes.size() > 0) {
-                    bcode = barcodes.valueAt(0); //gets latest barcode from array
+                    code = barcodes.valueAt(0).displayValue; //gets latest barcode from array
                     Intent intent = new Intent();
-                    intent.putExtra("barcode", bcode);
+                    intent.putExtra("barcode", code);
                     setResult(CommonStatusCodes.SUCCESS, intent);
                 }
             }

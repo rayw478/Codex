@@ -1,6 +1,5 @@
 package raymond.infox;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,11 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.ArrayList;
 
@@ -58,20 +54,23 @@ public class MainActivity extends AppCompatActivity {
                 Cursor data = db.getItem(name);
                 data.moveToNext();
                 updateEntry(view, data.getString(0), data.getString(1),
-                                  data.getString(2), data.getString(3));
+                                  data.getString(2), data.getString(3),
+                                  data.getString(4), data.getString(5));
             }
         });
 
     }
 
 
-    protected void updateEntry(View v, String barcode, String desc, String price, String img) {
+    protected void updateEntry(View v, String barcode, String desc, String price, String img, String size, String dep) {
         Intent intent = new Intent(this, BarcodeActivity.class);
         int requestCode = 1;
         intent.putExtra("code", barcode);
         intent.putExtra("desc", desc);
         intent.putExtra("price", price);
         intent.putExtra("imgPath", img);
+        intent.putExtra("size", size);
+        intent.putExtra("department", dep);
         intent.putExtra("requestCode", requestCode);
         startActivityForResult(intent, requestCode);
     }
