@@ -1,59 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minWidth="137dp"
-    android:minHeight="250dp"
-    tools:layout_editor_absoluteY="25dp">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
+    <include
+        layout="@layout/app_bar_main2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/ic_add_white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main2"
+        app:menu="@menu/activity_main2_drawer" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-    <ScrollView
-        android:id="@+id/scrollView4"
-        android:layout_width="395dp"
-        android:layout_height="658dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
-
-    </ScrollView>
-
-    <ListView
-        android:id="@+id/entry_list"
-        style="@style/Widget.AppCompat.ListView.DropDown"
-        android:layout_width="350dp"
-        android:layout_height="640dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView4"
-        app:layout_constraintStart_toStartOf="@+id/scrollView4"
-        app:layout_constraintTop_toTopOf="@+id/scrollView4" />
-
-</android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.DrawerLayout>

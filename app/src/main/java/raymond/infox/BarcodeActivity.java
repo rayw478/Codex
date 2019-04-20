@@ -3,12 +3,15 @@ package raymond.infox;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -57,7 +60,14 @@ public class BarcodeActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<Categories> adapter = new ArrayAdapter<Categories>(this, android.R.layout.simple_spinner_item, Categories.values());
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
+        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+
+
+        ArrayAdapter<Categories> adapter = new ArrayAdapter<Categories>(this, android.R.layout.simple_spinner_dropdown_item, Categories.values());
         departmentEntry.setAdapter(adapter);
 
         if (getIntent().getIntExtra("requestCode", 0) != ADD_REQUEST) {
@@ -94,6 +104,7 @@ public class BarcodeActivity extends AppCompatActivity {
                 if (!image.isEmpty()) {
                     File photo = new File(image);
                     if (photo.exists()) {
+                        imagePath = image;
                         Bitmap bmp = BitmapFactory.decodeFile(image);
                         imageEntry.setImageBitmap(bmp);
                     }
@@ -108,8 +119,22 @@ public class BarcodeActivity extends AppCompatActivity {
                 addEntry(view);
             }
         });
+        imageEntry.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                if (imagePath.equals("")) {
+                    Toast.makeText(BarcodeActivity.this, "No picture", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), ImageActivity.class);
+                    intent.putExtra("imagePath", imagePath);
+                    startActivity(intent);
+                }
+            }
+        });
     }
+
+
 
     //add a click event on the button
     public void scanBarcode(View v) {
