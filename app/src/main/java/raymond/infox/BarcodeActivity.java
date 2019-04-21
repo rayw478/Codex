@@ -67,51 +67,6 @@ public class BarcodeActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
-        ArrayAdapter<Categories> adapter = new ArrayAdapter<Categories>(this, android.R.layout.simple_spinner_dropdown_item, Categories.values());
-        departmentEntry.setAdapter(adapter);
-
-        if (getIntent().getIntExtra("requestCode", 0) != ADD_REQUEST) {
-            String code = getIntent().getStringExtra("code");
-            String desc = getIntent().getStringExtra("desc");
-            String price = getIntent().getStringExtra("price");
-            String image = getIntent().getStringExtra("imgPath");
-            String size = getIntent().getStringExtra("size");
-            String dep = getIntent().getStringExtra("department");
-
-
-            if (code != null) {
-                barcodeEntry.setText(code);
-            }
-            if (desc != null) {
-                descEntry.setText(desc);
-            }
-            if (price != null) {
-                priceEntry.setText(price);
-            }
-            if (size != null) {
-                sizeEntry.setText(size);
-            }
-            if (dep != null) {
-                if (!dep.equals("")) {
-                    Categories cat = Categories.ELECTRONICS.toCategory(dep);
-                    if (cat != null) {
-                        int spinnerPosition = adapter.getPosition(cat);
-                        departmentEntry.setSelection(spinnerPosition);
-                    }
-                }
-            }
-            if (image != null) {
-                if (!image.isEmpty()) {
-                    File photo = new File(image);
-                    if (photo.exists()) {
-                        imagePath = image;
-                        Bitmap bmp = BitmapFactory.decodeFile(image);
-                        imageEntry.setImageBitmap(bmp);
-                    }
-                }
-            }
-        }
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,46 +87,9 @@ public class BarcodeActivity extends AppCompatActivity {
                 }
             }
         });
+        updateEntries();
     }
 
-
-
-    //add a click event on the button
-    public void scanBarcode(View v) {
-        Intent intent = new Intent(this, ScanBarcodeActivity.class);
-        intent.putExtra("barcode", barcodeEntry.getText().toString());
-        startActivityForResult(intent, 3);
-    }
-
-    // Add entry to database
-    public void addEntry(View v) {
-        if (barcodeEntry.length() != 0 && descEntry.length() != 0) {
-            if (db.addOrUpdateData(barcodeEntry.getText().toString(), descEntry.getText().toString(),
-                                   priceEntry.getText().toString(), imagePath, sizeEntry.getText().toString(),
-                                  (Categories) departmentEntry.getSelectedItem())) {
-                Toast.makeText(this, "Entry add success!", Toast.LENGTH_SHORT).show();
-                setResult(CommonStatusCodes.SUCCESS);
-                db.close();
-                finish();
-            } else {
-                Toast.makeText(this, "Unable to add entry", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Barcode or description cannot be empty!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // delete entry
-    public void removeEntry(View v) {
-        if (getIntent().getIntExtra("requestCode", 0) == ADD_REQUEST) {
-            setResult(CommonStatusCodes.CANCELED);
-            finish();
-        } else {
-            db.removeData(getIntent().getStringExtra("code"));
-            setResult(CommonStatusCodes.SUCCESS);
-            finish();
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -195,5 +113,119 @@ public class BarcodeActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Starts a camera activity to scan a barcode and/or take a picture
+     *
+     * @param v Scan button
+     */
+    public void scanBarcode(View v) {
+        Intent intent = new Intent(this, ScanBarcodeActivity.class);
+        intent.putExtra("barcode", barcodeEntry.getText().toString());
+        startActivityForResult(intent, 3);
+    }
+
+    /**
+     * Creates a new entry in database with given information. A barcode and description is required.
+     *
+     * @param v Add button
+     */
+    public void addEntry(View v) {
+        if (barcodeEntry.length() != 0 && descEntry.length() != 0) {
+            if (db.addOrUpdateData(barcodeEntry.getText().toString(), descEntry.getText().toString(),
+                    priceEntry.getText().toString(), imagePath, sizeEntry.getText().toString(),
+                    (Department) departmentEntry.getSelectedItem())) {
+                Toast.makeText(this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
+                setResult(CommonStatusCodes.SUCCESS);
+                db.close();
+                finish();
+            } else {
+                Toast.makeText(this, "Unable to add entry", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Barcode or description cannot be empty!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Removes current entry from database, or discards any information currently entered.
+     *
+     * @param v Delete button
+     */
+    public void removeEntry(View v) {
+        if (getIntent().getIntExtra("requestCode", 0) == ADD_REQUEST) {
+            setResult(CommonStatusCodes.CANCELED);
+            finish();
+        } else {
+            db.removeData(getIntent().getStringExtra("code"));
+            setResult(CommonStatusCodes.SUCCESS);
+            finish();
+        }
+    }
+
+    /**
+     * If an entry is clicked on from the main activity, update all current views with all available
+     * information.
+     */
+    public void updateEntries() {
+        if (getIntent().getIntExtra("requestCode", 0) != ADD_REQUEST) {
+            ArrayAdapter<Department> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Department.values());
+            departmentEntry.setAdapter(adapter);
+            String code = getIntent().getStringExtra("code");
+            String desc = getIntent().getStringExtra("desc");
+            String price = getIntent().getStringExtra("price");
+            String image = getIntent().getStringExtra("imgPath");
+            String size = getIntent().getStringExtra("size");
+            String dep = getIntent().getStringExtra("department");
+
+
+            if (code != null) {
+                barcodeEntry.setText(code);
+            }
+            if (desc != null) {
+                descEntry.setText(desc);
+            }
+            if (price != null) {
+                priceEntry.setText(price);
+            }
+            if (size != null) {
+                sizeEntry.setText(size);
+            }
+            if (dep != null) {
+                if (!dep.equals("")) {
+                    Department cat = getCategory(dep);
+                    if (cat != null) {
+                        int spinnerPosition = adapter.getPosition(cat);
+                        departmentEntry.setSelection(spinnerPosition);
+                    }
+                }
+            }
+            if (image != null) {
+                if (!image.isEmpty()) {
+                    File photo = new File(image);
+                    if (photo.exists()) {
+                        imagePath = image;
+                        Bitmap bmp = BitmapFactory.decodeFile(image);
+                        imageEntry.setImageBitmap(bmp);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets the Category enum constant given a name.
+     *
+     * @param name  String value of the enum constant in question
+     * @return      The corresponding Department enum
+     */
+    private Department getCategory(String name) {
+        for (Department c : Department.values()) {
+            if (c.toString().equals(name)) {
+                return c;
+            }
+        }
+        return null;
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -29,22 +30,23 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int UPDATE_REQUEST_CODE = 1;
+    private static final int ADD_REQUEST_CODE    = 2;
     Database db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        db = new Database(this);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addEntry(view);
+                addEntry();
             }
         });
-        fillEntries();
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -56,17 +58,31 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        db = new Database(this);
+        fillEntries();
     }
 
     public void fillEntries() {
         ListView list = findViewById(R.id.entry_list);
-        Cursor data = db.getData();
+//        Cursor data = db.getData();
         ArrayList<String> entries = new ArrayList<>();
-        while (data.moveToNext()) {
-            entries.add(data.getString(1));
+//        while (data.moveToNext()) {
+//            entries.add(data.getString(1));
+//        }
+//        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, entries);
+//        list.setAdapter(adapter);
+//
+
+        ArrayList<Cursor> cursors = db.getCategorizedData();
+        int index = 0;
+        for (Cursor c : cursors) {
+            entries.add(c.getExtras().getString("department"));
+            while (c.moveToNext()) {
+                entries.add("       " + c.getString(1));
+            }
         }
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, entries);
         list.setAdapter(adapter);
@@ -74,34 +90,34 @@ public class MainActivity extends AppCompatActivity
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = parent.getItemAtPosition(position).toString();
+                String name = parent.getItemAtPosition(position).toString().trim();
                 Cursor data = db.getItem(name);
-                data.moveToNext();
-                updateEntry(view, data.getString(0), data.getString(1),
-                        data.getString(2), data.getString(3),
-                        data.getString(4), data.getString(5));
+                if (data.moveToNext()) {
+                    updateEntry(data.getString(0), data.getString(1),
+                            data.getString(2), data.getString(3),
+                            data.getString(4), data.getString(5));
+                }
             }
         });
+
     }
 
-    protected void updateEntry(View v, String barcode, String desc, String price, String img, String size, String dep) {
+    protected void updateEntry(String barcode, String desc, String price, String img, String size, String dep) {
         Intent intent = new Intent(this, BarcodeActivity.class);
-        int requestCode = 1;
         intent.putExtra("code", barcode);
         intent.putExtra("desc", desc);
         intent.putExtra("price", price);
         intent.putExtra("imgPath", img);
         intent.putExtra("size", size);
         intent.putExtra("department", dep);
-        intent.putExtra("requestCode", requestCode);
-        startActivityForResult(intent, requestCode);
+        intent.putExtra("requestCode", UPDATE_REQUEST_CODE);
+        startActivityForResult(intent, UPDATE_REQUEST_CODE);
     }
 
-    protected void addEntry(View v) {
+    protected void addEntry() {
         Intent intent = new Intent(this, BarcodeActivity.class);
-        int requestCode = 2;
-        intent.putExtra("requestCode", requestCode);
-        startActivityForResult(intent, requestCode);
+        intent.putExtra("requestCode", ADD_REQUEST_CODE);
+        startActivityForResult(intent, ADD_REQUEST_CODE);
     }
 
     @Override
@@ -113,7 +129,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -145,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -163,7 +179,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

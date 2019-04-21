@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class Database extends SQLiteOpenHelper {
 
@@ -19,7 +22,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String COL5 = "Size";
     private static final String COL6 = "Category";
 
-    public Database(Context context) {
+    Database(Context context) {
         super(context, TABLE_NAME, null, 1);
     }
 
@@ -45,7 +48,7 @@ public class Database extends SQLiteOpenHelper {
      * @param price Price at scan
      * @return      true if successfully added, false otherwise
      */
-    public boolean addOrUpdateData(String code, String desc, String price, String image, String size, Categories dep) {
+    boolean addOrUpdateData(String code, String desc, String price, String image, String size, Department dep) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, code);
@@ -58,27 +61,23 @@ public class Database extends SQLiteOpenHelper {
         Log.d(TAG, "addOrUpdateData: Adding " + code + " to " + TABLE_NAME);
         long result = db.insert(TABLE_NAME, null, contentValues);
 
-        //if date as inserted incorrectly it will return -1
+        //if data is inserted incorrectly it will return -1
         if (result == -1) {
             db.update(TABLE_NAME, contentValues, String.format("%s = ?", COL1), new String[]{code} );
         }
         return true;
     }
 
-    public boolean removeData(String code) {
+    boolean removeData(String code) {
         SQLiteDatabase db = this.getWritableDatabase();
-        if (db.delete(TABLE_NAME, String.format("%s = ?", COL1), new String[]{code}) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return db.delete(TABLE_NAME, String.format("%s = ?", COL1), new String[]{code}) != 0;
     }
 
     /**
      * Returns the data in the database
-     * @return
+     * @return  A cursor to the first entry in the database
      */
-    public Cursor getData(){
+    Cursor getData(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
         return db.rawQuery(query, null);
@@ -86,13 +85,28 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Returns only the ID that matches the name passed in
-     * @param name
-     * @return
+     * @param name  The description of the item to be fetched
+     * @return      The cursor to the item to be fetched
      */
-    public Cursor getItem(String name){
+    Cursor getItem(String name){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL2 + "=\"" + name + "\"";
         return db.rawQuery(query, null);
+    }
+
+    ArrayList<Cursor> getCategorizedData() {
+        ArrayList<Cursor> ret = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Department d : Department.values()) {
+            String department = d.toString();
+            Bundle bundle = new Bundle();
+            bundle.putString("department", department);
+            String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL6 + "=\"" + department + "\"";
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.setExtras(bundle);
+            ret.add(cursor);
+        }
+        return  ret;
     }
 
 

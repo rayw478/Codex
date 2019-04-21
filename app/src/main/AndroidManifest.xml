@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ImageActivity"></activity>
+        <activity android:name=".ImageActivity" />
         <activity
             android:name=".BarcodeActivity"
             android:label="Add or Edit Entry" /> <!-- added mobile vision dependencies and version -->
