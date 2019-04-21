@@ -168,9 +168,9 @@ public class BarcodeActivity extends AppCompatActivity {
      * information.
      */
     public void updateEntries() {
+        ArrayAdapter<Department> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Department.values());
+        departmentEntry.setAdapter(adapter);
         if (getIntent().getIntExtra("requestCode", 0) != ADD_REQUEST) {
-            ArrayAdapter<Department> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Department.values());
-            departmentEntry.setAdapter(adapter);
             String code = getIntent().getStringExtra("code");
             String desc = getIntent().getStringExtra("desc");
             String price = getIntent().getStringExtra("price");

@@ -2,7 +2,6 @@ package raymond.infox;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
-        toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,6 +59,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
         db = new Database(this);
         fillEntries();
@@ -79,23 +80,41 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Cursor> cursors = db.getCategorizedData();
         int index = 0;
         for (Cursor c : cursors) {
-            entries.add(c.getExtras().getString("department"));
+            ArrayList<String> depItems = new ArrayList<>();
             while (c.moveToNext()) {
-                entries.add("       " + c.getString(1));
+                depItems.add("       " + c.getString(1));
             }
+            String departmentHeader = c.getExtras().getString("department") + " - (" + depItems.size() + ")";
+            entries.add(departmentHeader);
+            entries.addAll(depItems);
+
         }
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, entries);
         list.setAdapter(adapter);
 
+
+
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO
+                Toast.makeText(MainActivity.this, "Implement delete", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                view.setBackgroundColor(0x6ff425);
                 String name = parent.getItemAtPosition(position).toString().trim();
                 Cursor data = db.getItem(name);
                 if (data.moveToNext()) {
                     updateEntry(data.getString(0), data.getString(1),
-                            data.getString(2), data.getString(3),
-                            data.getString(4), data.getString(5));
+                                data.getString(2), data.getString(3),
+                                data.getString(4), data.getString(5));
                 }
             }
         });
@@ -123,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == CommonStatusCodes.SUCCESS) {
-            fillEntries();
+           fillEntries();
         }
     }
 
@@ -153,6 +172,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -165,18 +186,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
