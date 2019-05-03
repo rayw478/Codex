@@ -8,12 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Database extends SQLiteOpenHelper {
+public class Database extends SQLiteOpenHelper implements Serializable {
 
     private static final String TAG = "Database";
-
     private static final String TABLE_NAME = "barcode_table";
     private static final String COL1 = "Barcode";
     private static final String COL2 = "Item";
@@ -22,6 +22,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String COL5 = "Size";
     private static final String COL6 = "Category";
 
+    /**
+     * Constructor
+     */
     Database(Context context) {
         super(context, TABLE_NAME, null, 1);
     }
@@ -68,6 +71,12 @@ public class Database extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Removes an entry with matching barcode in the database
+     *
+     * @param code  The barcode to be queried and deleted
+     * @return      true if successful, else false
+     */
     boolean removeData(String code) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, String.format("%s = ?", COL1), new String[]{code}) != 0;
@@ -94,6 +103,11 @@ public class Database extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    /**
+     * Retrieves all entries in the database sorted by category/department.
+     *
+     * @return  An array of Cursors, each containing the items in their respective department
+     */
     ArrayList<Cursor> getCategorizedData() {
         ArrayList<Cursor> ret = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
