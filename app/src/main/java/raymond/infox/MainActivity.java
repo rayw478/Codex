@@ -1,6 +1,8 @@
 package raymond.infox;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     private static final int UPDATE_REQUEST_CODE = 1;
     private static final int ADD_REQUEST_CODE    = 2;
     Database db;
-    ArrayList<String> entries;
+    ArrayList<String> currentDisplayedEntries;
     ListView list;
     ListAdapter adapter;
 
@@ -67,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         db = new Database(this);
+        currentDisplayedEntries = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currentDisplayedEntries);
+        list.setAdapter(adapter);
         fillEntries();
     }
 
@@ -74,18 +80,19 @@ public class MainActivity extends AppCompatActivity
      * Helper method that fills the main activity with item descriptions contained in the database
      */
     public void fillEntries() {
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, entries);
-        entries = new ArrayList<>();
+        currentDisplayedEntries.clear();
         for (Cursor c : db.getCategorizedData()) {
             ArrayList<String> depItems = new ArrayList<>();
             while (c.moveToNext()) {
                 depItems.add("       " + c.getString(1));
             }
             String departmentHeader = c.getExtras().getString("department") + " - (" + depItems.size() + ")";
-            entries.add(departmentHeader);
-            entries.addAll(depItems);
+            currentDisplayedEntries.add(departmentHeader);
+            currentDisplayedEntries.addAll(depItems);
         }
-        list.setAdapter(adapter);
+        ((ArrayAdapter) adapter).notifyDataSetChanged();
+        list.invalidateViews();
+
 
         // Performs the long-click delete action
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -130,7 +137,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         db.removeData(data.getString(0));
-                        entries.remove("       " + data.getString(1));
+                        currentDisplayedEntries.remove("       " + data.getString(1));
                         ((ArrayAdapter) adapter).notifyDataSetChanged();
                         list.invalidateViews();
                         Toast.makeText(MainActivity.this, "Entry deleted!", Toast.LENGTH_SHORT).show();
@@ -190,6 +197,47 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main2, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!newText.isEmpty()) {
+                    currentDisplayedEntries.clear();
+                    Cursor cursor = db.getMatchingData(newText);
+                    while (cursor.moveToNext()) {
+                        currentDisplayedEntries.add("       " + cursor.getString(1));
+                    }
+                    ((ArrayAdapter) adapter).notifyDataSetChanged();
+                    list.invalidateViews();
+                } else {
+                    fillEntries();
+                }
+                return true;
+            }
+        });
+
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                fillEntries();
+                return true;
+            }
+        });
         return true;
     }
 

@@ -83,7 +83,7 @@ public class Database extends SQLiteOpenHelper implements Serializable {
     }
 
     /**
-     * Returns the data in the database
+     * Returns all the data in the database
      * @return  A cursor to the first entry in the database
      */
     Cursor getData(){
@@ -104,7 +104,7 @@ public class Database extends SQLiteOpenHelper implements Serializable {
     }
 
     /**
-     * Retrieves all entries in the database sorted by category/department.
+     * Retrieves all currentDisplayedEntries in the database sorted by category/department.
      *
      * @return  An array of Cursors, each containing the items in their respective department
      */
@@ -121,6 +121,12 @@ public class Database extends SQLiteOpenHelper implements Serializable {
             ret.add(cursor);
         }
         return  ret;
+    }
+
+    Cursor getMatchingData(String searchString) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COL2 + " LIKE " + "\'%" + searchString + "%\'";
+        return db.rawQuery(query, null);
     }
 
 
